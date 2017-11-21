@@ -12,9 +12,9 @@ smps = ARGS[1]
 readSmps(smps)
 
 # type of solution methods
-solve_types = [:Dual, :Benders, :Extensive]
+solve_types = [:Dual, :Benders, :Extensive, :DW]
 
-optimize(solve_type = solve_types[1])
+optimize(solve_type = solve_types[4])
 
 @show getprimobjval() # Dsp.model.primVal
 @show getdualobjval() # Dsp.model.dualVal

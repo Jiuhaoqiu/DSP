@@ -17,7 +17,7 @@ MPI.Init()
 
 readSmps(smps)
 
-optimize(solve_type = solve_types[1])
+optimize(solve_type = :DW)
 
 if MPI.Comm_rank(MPI.COMM_WORLD) == 0
     @show getprimobjval() 
