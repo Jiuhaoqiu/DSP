@@ -8,7 +8,7 @@
 /** Coin */
 #include "CoinWarmStartBasis.hpp"
 /** Dsp */
-#include "TreeSearch/DspBranch.h"
+#include "Solver/DantzigWolfe/DspBranchDw.h"
 #include "Solver/DecSolver.h"
 #include "Solver/DantzigWolfe/DwCol.h"
 #include "Solver/DantzigWolfe/DwWorker.h"
@@ -66,7 +66,7 @@ public:
     DSP_RTN_CODE switchToPhase2();
 
 	/** set branching objects */
-	virtual void setBranchingObjects(const DspBranch* branchobj);
+	virtual void setBranchingObjects(const DspBranchDw* branchobj);
 
 	/** set best primal solution */
 	void setBestPrimalSolution(const double* solution);
@@ -206,8 +206,6 @@ public:
     int itercnt_;
     int ngenerated_;
 
-    std::vector<double> log_time_;
-    std::vector<double> log_bestdual_bounds_;
 
     /**@name Time stamps */
     double t_start_; /**< solution start time */

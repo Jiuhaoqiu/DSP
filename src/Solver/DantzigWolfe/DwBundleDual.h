@@ -35,7 +35,7 @@ public:
     virtual DSP_RTN_CODE solve();
 
 	/** set branching objects */
-	virtual void setBranchingObjects(const DspBranch* branchobj);
+	virtual void setBranchingObjects(const DspBranchDw* branchobj);
 
 protected:
 

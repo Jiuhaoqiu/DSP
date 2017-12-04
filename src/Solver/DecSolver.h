@@ -166,6 +166,8 @@ public:
 	/** get best dual objective */
 	virtual double getBestDualObjective() {return bestdualobj_;}
 
+        virtual vector<double>& getLogBestDualBounds(){return log_bestdual_bounds_;}
+
 	/** get dual objective */
 	virtual double getDualObjective() {return dualobj_;}
 
@@ -187,6 +189,7 @@ public:
 	/** get solution time */
 	virtual double getCpuTime() {return cputime_;}
 	virtual double getWallTime() {return walltime_;}
+	virtual vector<double>& getLogTime(){return log_time_;}
 
 	/** get number of iterations */
 	virtual int getNumIterations() {return numIterations_;}
@@ -263,6 +266,7 @@ protected:
 	std::vector<double> primsol_;     /**< primal solution */
 	std::vector<double> bestdualsol_; /**< bestdual solution */
 	std::vector<double> dualsol_;     /**< dual solution */
+        std::vector<double> log_bestdual_bounds_;
 	double bestprimobj_;   /**< best primal objective */
 	double primobj_;       /**< primal objective */
 	double bestdualobj_;   /**< best dual objective */
@@ -272,6 +276,7 @@ protected:
 
 	double cputime_;    /**< cpu time */
 	double walltime_;   /**< wall time */
+        std::vector<double> log_time_;
 	double time_remains_;  /**< time limit */
 	double tic_;           /**< time stamp */
 	int numIterations_; /**< number of iterations for a given method */

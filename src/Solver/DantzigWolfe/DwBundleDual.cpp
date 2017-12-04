@@ -610,7 +610,7 @@ DSP_RTN_CODE DwBundleDual::getLagrangianBound(
 	return DSP_RTN_OK;
 }
 
-void DwBundleDual::setBranchingObjects(const DspBranch* branchobj) {
+void DwBundleDual::setBranchingObjects(const DspBranchDw* branchobj) {
 	/** shouldn't be null */
 	if (branchobj == NULL)
 		return;

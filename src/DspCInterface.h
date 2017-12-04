@@ -162,10 +162,12 @@ void setSolution(
 
 /** solve decomposition */
 void solveDw(DspApiEnv * env);
+void solvePSCG(DspApiEnv * env);
 
 #ifdef DSP_HAS_MPI
 /** solve decomposition */
 void solveDwMpi(DspApiEnv * env, MPI_Comm comm);
+void solvePSCGMpi(DspApiEnv *env, MPI_Comm comm);
 #endif
 
 /** read parameter file */

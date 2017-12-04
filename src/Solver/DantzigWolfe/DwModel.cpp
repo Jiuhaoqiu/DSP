@@ -101,8 +101,8 @@ DSP_RTN_CODE DwModel::solve() {
 }
 
 bool DwModel::chooseBranchingObjects(
-		DspBranch*& branchingUp, /**< [out] branching-up object */
-		DspBranch*& branchingDn  /**< [out] branching-down object */) {
+		DspBranchDw*& branchingUp, /**< [out] branching-up object */
+		DspBranchDw*& branchingDn  /**< [out] branching-down object */) {
 	int findPhase = 0;
 	bool branched = false;
 	double dist, maxdist = 1.0e-6;
@@ -171,8 +171,8 @@ bool DwModel::chooseBranchingObjects(
 			branchingFirstStage = branchingIndex % tss->getNumCols(0);
 
 		/** creating branching objects */
-		branchingUp = new DspBranch();
-		branchingDn = new DspBranch();
+		branchingUp = new DspBranchDw();
+		branchingDn = new DspBranchDw();
 		for (int j = 0; j < master_->ncols_orig_; ++j) {
 			if (master_->ctype_orig_[j] == 'C') continue;
 			/** NOTE: branching on all the first-stage variables */
