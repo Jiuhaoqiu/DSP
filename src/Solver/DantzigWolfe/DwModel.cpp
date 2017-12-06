@@ -101,8 +101,10 @@ DSP_RTN_CODE DwModel::solve() {
 }
 
 bool DwModel::chooseBranchingObjects(
-		DspBranchDw*& branchingUp, /**< [out] branching-up object */
-		DspBranchDw*& branchingDn  /**< [out] branching-down object */) {
+		DspBranch*& branchingUp, /**< [out] branching-up object */
+		DspBranch*& branchingDn  /**< [out] branching-down object */) {
+	//branchingUp = dynamic_cast<DspBranchDw*>(branchingUpDsp);
+	//branchingDn = dynamic_cast<DspBranchDw*>(branchingDnDsp);
 	int findPhase = 0;
 	bool branched = false;
 	double dist, maxdist = 1.0e-6;
@@ -188,8 +190,8 @@ bool DwModel::chooseBranchingObjects(
 		}
 		branchingUp->bestBound_ = master_->getBestDualObjective();
 		branchingDn->bestBound_ = master_->getBestDualObjective();
-		branchingUp->dualsol_.assign(master_->getBestDualSolution(), master_->getBestDualSolution() + master_->nrows_);
-		branchingDn->dualsol_.assign(master_->getBestDualSolution(), master_->getBestDualSolution() + master_->nrows_);
+		dynamic_cast<DspBranchDw*>(branchingUp)->dualsol_.assign(master_->getBestDualSolution(), master_->getBestDualSolution() + master_->nrows_);
+		dynamic_cast<DspBranchDw*>(branchingDn)->dualsol_.assign(master_->getBestDualSolution(), master_->getBestDualSolution() + master_->nrows_);
 	} else {
 		DSPdebugMessage("No branch object is found.\n");
 	}

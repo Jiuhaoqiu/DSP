@@ -4,7 +4,7 @@
 
 //#define DSP_DEBUG
 
-#include "cplex.h"
+#include "ilcplex/cplex.h"
 /** Coin */
 #include "OsiCpxSolverInterface.hpp"
 #include "CoinUtility.hpp"

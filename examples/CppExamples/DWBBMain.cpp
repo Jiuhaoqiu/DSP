@@ -71,35 +71,6 @@ int main(int argc, char **argv) {
 	setIntPtrParam(env, "ARR_PROC_IDX", proc_idx_size, proc_idx);
 	delete [] proc_idx;
 	solveDwMpi(env, MPI_COMM_WORLD);
-	//solveDw(env);
-	//DwSolverMpi solver(&smps_model, &par, &message, MPI_COMM_WORLD);
-	//solver.init();
-	//solver.solve();
-	//solver.finalize();
-	//DwModel dwmodel(&solver);
-	//double *z = new double[model.n1];
-	#if 0
-	vector<double*> omega;
-	for(int tS=0; tS<model.nNodeSPs; tS++){
-	    omega.push_back(new double[model.n1]);
-	    for(int ii=0;ii<model.n1; ii++) omega[tS][ii]=0.0;
-	}
-	#endif
-	//model.readZIntoModel(z);
-	//model.readOmegaIntoModel(omega);
-	//PSCGNodeDesc *desc = new PSCGNodeDesc(&model);
-	//desc->installSubproblemFromNodeDesc();
-	//model.installSubproblem(z,omega,NULL,NULL,NULL,0);
-	//AlpsKnowledgeBrokerSerial broker(dwmodel);
-	//broker.setNodeSelection(new AlpsNodeSelectionBreadth());
-	//broker.setNodeSelection(new AlpsNodeSelectionBest());
-	//broker.setRampUpNodeSelection(new AlpsNodeSelectionDepth());
-        //broker.setPhase(AlpsPhaseRampup);
-//cout << "Begining search...." << endl;
-//	broker.search(&dwmodel);
-	//dwmodel.finalPrintout();
-//cout << "...Ending search." << endl;
-	//model.upBranchAllSPsAt(9,1.0);
 
 	
 

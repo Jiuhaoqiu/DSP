@@ -7,7 +7,7 @@
 
 //#define DSP_DEBUG
 
-#include "cplex.h"
+#include "ilcplex/cplex.h"
 #include "OsiCpxSolverInterface.hpp"
 #include "DantzigWolfe/DwBundleDual.h"
 #include "Utility/DspUtility.h"

@@ -19,13 +19,13 @@
 //#include "Solver/Benders/BdDriverSerial.h"
 //#include "Solver/DualDecomp/DdDriverSerial.h"
 #include "Solver/DantzigWolfe/DwSolverSerial.h"
-//#include "Solver/PSCG/PSCGSolverSerial.h"
+#include "Solver/PSCG/PSCGBBSolverSerial.h"
 #ifdef DSP_HAS_MPI
 //#include "Solver/Benders/BdDriverMpi.h"
 //#include "Solver/DualDecomp/DdDriverMpi.h"
 //#include "DspDriverMpi.h"
 #include "Solver/DantzigWolfe/DwSolverMpi.h"
-//#include "Solver/PSCG/PSCGSolverMpi.h"
+#include "Solver/PSCG/PSCGBBSolverMpi.h"
 #endif
 #include "Model/DecTssModel.h"
 #include "Model/DecBlkModel.h"
@@ -233,13 +233,12 @@ void solveDw(DspApiEnv * env) {
 	env->solver_->solve();
 	env->solver_->finalize();
 }
-#if 0
+#if 1
 void solvePSCG(DspApiEnv * env) {
-	env->solver_ = new PSCGSolverSerial(env->model_, env->par_, env->message_);
+	env->solver_ = new PSCGBBSolverSerial(env->model_, env->par_, env->message_);
 	DSP_RTN_CHECK_RTN(env->solver_->init());
 	env->solver_->solve();
 	env->solver_->finalize();
-
 }
 #endif
 
@@ -252,15 +251,13 @@ void solveDwMpi(DspApiEnv * env, MPI_Comm comm) {
 	env->solver_->solve();
 	env->solver_->finalize();
 }
-#if 0
 void solvePSCGMpi(DspApiEnv * env, MPI_Comm comm) {
-	env->solver_ = new PSCGSolverMpi(env->model_, env->par_, env->message_, comm);
+	env->solver_ = new PSCGBBSolverMpi(env->model_, env->par_, env->message_, comm);
 	//env->solver_ = new DspDriverMpi(env->model_, env->par_, comm);
 	DSP_RTN_CHECK_RTN(env->solver_->init());
 	env->solver_->solve();
 	env->solver_->finalize();
 }
-#endif
 #endif
 
 /** read parameter file */

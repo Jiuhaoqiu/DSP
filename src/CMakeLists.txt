@@ -6,6 +6,8 @@ set(COIN_LIB_DIR "${DEPEND_DIR}/lib")
 set(COIN_INC_DIR "${DEPEND_DIR}/include/coin")
 set(OOQP_LIB_DIR "${DEPEND_DIR}/lib")
 set(OOQP_INC_DIR "${DEPEND_DIR}/include/ooqp")
+set(PSCG_LIB_DIR "${DEPEND_DIR}/lib")
+set(PSCG_INC_DIR "${DEPEND_DIR}/include/pscg")
 
 ##################################################
 # add include directories
@@ -18,6 +20,9 @@ include_directories(
 	${COIN_INC_DIR}
 	${OOQP_INC_DIR}
 	${CPLEX_INC_DIR}
+	${CPLEX_INC_DIR2}
+	${CONCERT_INC_DIR}
+	${PSCG_INC_DIR}
 )
 
 ##################################################
@@ -32,11 +37,14 @@ set(DSP_SRC_FILES
 	Model/StoModel.cpp
 	Model/TssModel.cpp
 	Solver/DantzigWolfe/DwModel.cpp
+	Solver/PSCG/PSCGModel.cpp
 	Solver/DantzigWolfe/DwMaster.cpp
 	Solver/DantzigWolfe/DwBundleDual.cpp
 	Solver/DantzigWolfe/DwHeuristic.cpp
 	Solver/DantzigWolfe/DwSolverSerial.cpp
 	Solver/DantzigWolfe/DwWorker.cpp
+	Solver/PSCG/PSCGBBSolverSerial.cpp
+	Solver/PSCG/PSCGNodeSolver.cpp
 	SolverInterface/OoqpEps.cpp
 	SolverInterface/OoqpStatus.cpp
 	SolverInterface/OsiOoqpSolverInterface.cpp
@@ -47,6 +55,7 @@ if (MPI_CXX_FOUND)
 	set(DSP_SRC_FILES ${DSP_SRC_FILES}
 		Solver/DantzigWolfe/DwSolverMpi.cpp
 		Solver/DantzigWolfe/DwWorkerMpi.cpp
+		Solver/PSCG/PSCGBBSolverMpi.cpp
 		Utility/DspMpi.cpp)
 endif()
 
@@ -54,7 +63,7 @@ add_library(Dsp SHARED
 	DspApiEnv.cpp
 	DspCInterface.cpp
 	${DSP_SRC_FILES})
-add_dependencies(Dsp Alps OOQP)
+add_dependencies(Dsp Alps OOQP PSCG)
 
 # set DSP libraries
 set(DSP_LIBS
@@ -72,6 +81,9 @@ set(DSP_LIBS
 	${LAPACK_LIBRARIES}
 	${COIN_LIB_DIR}/libOsiCpx.a
 	${CPLEX_LIB_DIR}/libcplex.a
+	${CPLEX_LIB_DIR}/libilocplex.a
+	${CONCERT_LIB_DIR}/libconcert.a
+	${PSCG_LIB_DIR}/libPSCG.so
 	gfortran
 	${ZLIB_LIBRARIES}
 	${BZIP2_LIBRARIES}

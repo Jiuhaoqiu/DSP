@@ -8,7 +8,7 @@
 //#define DSP_DEBUG
 
 #include "omp.h"
-#include "cplex.h"
+#include "ilcplex/cplex.h"
 /** Coin */
 #ifdef HAS_CBC
 #include "OsiCbcSolverInterface.hpp"

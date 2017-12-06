@@ -11,7 +11,7 @@
 #include "OsiCbcSolverInterface.hpp"
 #ifdef DSP_HAS_CPLEX
 #include "OsiCpxSolverInterface.hpp"
-#include "cplex.h"
+#include "ilcplex/cplex.h"
 #endif
 /** Dsp */
 #include "Utility/DspMacros.h"
