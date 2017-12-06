@@ -7,28 +7,29 @@
 
 #include "AlpsKnowledgeBrokerSerial.h"
 #include <Solver/PSCG/PSCGBBSolverSerial.h>
+#include <Solver/PSCG/PSCGNodeSolver.h>
+#include <PSCG.h>
 
 PSCGBBSolverSerial::PSCGBBSolverSerial(
 		DecModel *   model,  /**< model pointer */
 		DspParams *  par,    /**< parameters */
 		DspMessage * message /**< message pointer */):
-DecSolver(model, par, message), alps_(NULL) {}
+DecSolver(model, par, message), alps_(NULL), pscgSolver_(NULL), nodeSolver_(NULL){}
 
 PSCGBBSolverSerial::~PSCGBBSolverSerial() {
 	FREE_PTR(alps_);
 }
 
 DSP_RTN_CODE PSCGBBSolverSerial::init() {
-#if 0
 	BGN_TRY_CATCH
 
-	/** create worker */
-	worker_ = new PSCGWorker(model_, par_, message_);
+	/** create PSCG solver */
+	pscgSolver_ = new PSCG(*(dynamic_cast<DecTssModel*>(model_)));
 
-	/** create master */
-	//master_ = new PSCGMaster(worker_);
-	master_ = new PSCGBundleDual(worker_);
+	/** create node solver */
+	nodeSolver_ = new PSCGNodeSolver(model_,par_,message_,pscgSolver_);
 
+#if 0
 	/** initialize master */
 	DSP_RTN_CHECK_THROW(master_->init());
 
@@ -42,9 +43,9 @@ DSP_RTN_CODE PSCGBBSolverSerial::init() {
 	alps_->AlpsPar()->setEntry(AlpsParams::nodeLimit, par->getIntParam("ALPS/NODE_LIM"));
 	alps_->AlpsPar()->setEntry(AlpsParams::timeLimit, par->getDblParam("ALPS/TIME_LIM"));
 	alps_->AlpsPar()->setEntry(AlpsParams::clockType, AlpsClockTypeWallClock);
+#endif
 
 	END_TRY_CATCH_RTN(;,DSP_RTN_ERR)
-#endif
 	return DSP_RTN_OK;
 }
 

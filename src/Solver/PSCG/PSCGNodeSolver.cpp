@@ -14,26 +14,14 @@
 #include "Solver/PSCG/PSCGNodeSolver.h"
 #include "Utility/DspUtility.h"
 
-#if 0
-PSCGNodeSolver::PSCGNodeSolver(PSCG* pscg):
-DecSolver(pscg->getSmpsModel(), worker->par_, worker->message_),
-phase_(1),
-worker_(worker),
-ncols_orig_(0),
-ncols_start_(0),
-nrows_(0),
-nrows_orig_(0),
-nrows_conv_(0),
-nrows_core_(0),
-nrows_branch_(0),
-mat_orig_(NULL),
-itercnt_(0),
-ngenerated_(0),
-t_start_(0.0),
-t_total_(0.0),
-t_master_(0.0),
-t_colgen_(0.0) {
-	useBarrier_ = par_->getBoolParam("DW/MASTER/IPM");
+#if 1
+PSCGNodeSolver::PSCGNodeSolver(
+			DecModel *   model,  /**< model pointer */
+			DspParams *  par,    /**< parameters */
+			DspMessage * message, /**< message pointer */
+			PSCG* pscg):
+DecSolver(model,par,message),pscg_(pscg)
+{
 }
 #endif
 

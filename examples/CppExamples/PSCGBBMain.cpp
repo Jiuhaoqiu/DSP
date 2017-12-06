@@ -55,16 +55,24 @@ int main(int argc, char **argv) {
 	//par.readParameters(argc, argv);
 	//par.setMPIParams(mpiSize,mpiRank);
 	
-	TssModel *smps_model = getTssModel(env);
 	if(argc<2){ 
 	    cerr << "Need input file path/name" << endl;
 	    return 1;
 	}
-	readSmps(env, argv[1]);
+	DecTssModel *smps_model = new DecTssModel();
+	smps_model->readSmps(argv[1]);
+	env->model_=smps_model;
 
+
+	int n1 = dynamic_cast<DecTssModel*>(getModelPtr(env))->getNumCols(0);
+	int n2 = dynamic_cast<DecTssModel*>(getModelPtr(env))->getNumCols(1);
+cout << "Number of vars: " << n1 << " + " << n2 << endl;
 	int nS = dynamic_cast<DecTssModel*>(getModelPtr(env))->getNumScenarios();
-
-	setNumberOfScenarios(env,nS);
+cout << "Number of scenarios: " << nS << endl;
+	//setNumberOfScenarios(env,nS);
+	 n1 = dynamic_cast<DecTssModel*>(getModelPtr(env))->getNumCols(0);
+	 n2 = dynamic_cast<DecTssModel*>(getModelPtr(env))->getNumCols(1);
+cout << "Number of vars: " << n1 << " + " << n2 << endl;
 	int *proc_idx = new int[nS];
 	int proc_idx_size=0;
 	for(int ii=mpiRank; ii<nS; ii+=mpiSize){ 

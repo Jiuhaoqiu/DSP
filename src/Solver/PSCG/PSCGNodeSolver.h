@@ -32,11 +32,15 @@
  *
  * But not implemented here.
  */
-class PSCGNodeSolver: public DecSolver {
+class PSCGNodeSolver : public DecSolver {
 public:
 
     /** constructor with worker */
-    PSCGNodeSolver(PSCG* solver);
+    PSCGNodeSolver(
+			DecModel *   model,  /**< model pointer */
+			DspParams *  par,    /**< parameters */
+			DspMessage * message, /**< message pointer */
+			PSCG* solver);
 
     /** copy constructor */
     PSCGNodeSolver(const PSCGNodeSolver& rhs);

@@ -17,7 +17,7 @@ PSCGBBSolverMpi::PSCGBBSolverMpi(
 		DspParams*  par,     /**< parameters */
 		DspMessage* message, /**< message pointer */
 		MPI_Comm    comm     /**< MPI communicator */):
-PSCGBBSolverSerial(model, par, message), comm_(comm) {
+PSCGBBSolverSerial(model, par, message), comm_(comm){
 	MPI_Comm_size(comm_, &comm_size_);
 	MPI_Comm_rank(comm_, &comm_rank_);
 }
@@ -27,11 +27,17 @@ PSCGBBSolverMpi::~PSCGBBSolverMpi() {
 }
 
 DSP_RTN_CODE PSCGBBSolverMpi::init() {
-#if 0
 	BGN_TRY_CATCH
 
-	/** create worker */
-	worker_ = new PSCGWorkerMpi(model_, par_, message_, comm_);
+	/** create PSCG solver */
+	pscgSolver_ = new PSCG( *(dynamic_cast<DecTssModel*>(model_)),comm_);
+
+	pscgSolver_->computeBound();
+
+	/** create node solver */
+	nodeSolver_ = new PSCGNodeSolver(model_,par_,message_,pscgSolver_);
+
+#if 0
 
 	if (comm_rank_ == 0) {
 		/** create master */
@@ -51,8 +57,8 @@ DSP_RTN_CODE PSCGBBSolverMpi::init() {
 		alps_->AlpsPar()->setEntry(AlpsParams::timeLimit, par->getDblParam("ALPS/TIME_LIM"));
 		alps_->AlpsPar()->setEntry(AlpsParams::clockType, AlpsClockTypeWallClock);
 	}
-	END_TRY_CATCH_RTN(;,DSP_RTN_ERR)
 #endif
+	END_TRY_CATCH_RTN(;,DSP_RTN_ERR)
 
 	return DSP_RTN_OK;
 }

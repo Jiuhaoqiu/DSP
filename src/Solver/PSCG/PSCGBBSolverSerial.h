@@ -11,8 +11,8 @@
 #include <DecSolver.h>
 #include <TreeSearch/DspNodeSolution.h>
 #include <TreeSearch/DspBranch.h>
-#include <PSCG.h>
-#include <PSCG/PSCGModel.h>
+#include <Solver/PSCG/PSCGNodeSolver.h>
+#include <Solver/PSCG/PSCGModel.h>
 
 class PSCGBBSolverSerial: public DecSolver {
 public:
@@ -40,7 +40,8 @@ public:
 
 protected:
 
-	PSCG* pscg_;
+	PSCGNodeSolver* nodeSolver_;
+	PSCG *pscgSolver_;
 	PSCGModel * alps_; /**< Alps model pointer */
 
 };
