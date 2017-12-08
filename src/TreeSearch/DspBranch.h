@@ -20,6 +20,15 @@ public:
 	//std::vector<double> dualsol_;
 
 	DspBranch(){;}
+	DspBranch(const DspBranch &rhs){
+	    index_.resize(rhs.index_.size());
+	    lb_.resize(rhs.lb_.size());
+	    ub_.resize(rhs.ub_.size());
+	    std::copy(rhs.index_.begin(),rhs.index_.end(),index_.begin());
+	    std::copy(rhs.lb_.begin(),rhs.lb_.end(), lb_.begin());
+	    std::copy(rhs.ub_.begin(),rhs.ub_.end(), ub_.begin());
+	    bestBound_ = rhs.bestBound_;
+	}
 	~DspBranch(){;}
 	virtual void push_back(int index, double lb, double ub) {
 		int iii;

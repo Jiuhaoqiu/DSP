@@ -156,7 +156,7 @@ void PSCGNodeSolver::setBranchingObjects(const DspBranch* branchobj) {
 	int nBranchObjs = branchobj->index_.size();
 	pscg_->restoreOriginalVarBounds();
 	for(int ii=0; ii<nBranchObjs; ii++){
-	    pscg_->addBranchVarBd(br->mpiRanks[ii],br->spIndices[ii],br->index_[ii],br->lb_[ii],br->ub_[ii]);
+	    pscg_->addBranchVarBd(br->mpiRanks_[ii],br->spIndices_[ii],br->index_[ii],br->lb_[ii],br->ub_[ii]);
 	}
 	//read omega into pscg_
 	//set best Lagr bound into pscg_
