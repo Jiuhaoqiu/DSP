@@ -18,7 +18,8 @@
 #include "TreeSearch/DspTreeNode.h"
 #include "TreeSearch/DspModel.h"
 #include "TreeSearch/DspNodeSolution.h"
-#include "Solver/DantzigWolfe/DwMaster.h"
+#include "Solver/DecSolver.h"
+//#include "Solver/DantzigWolfe/DwMaster.h"
 
 DspTreeNode::DspTreeNode() :
 		AlpsTreeNode(),
@@ -46,7 +47,7 @@ int DspTreeNode::process(bool isRoot, bool rampUp) {
 	/** retrieve objects */
 	DspNodeDesc* desc = dynamic_cast<DspNodeDesc*>(desc_);
 	DspModel* model = dynamic_cast<DspModel*>(desc_->getModel());
-	DwMaster* solver = dynamic_cast<DwMaster*>(model->getSolver());
+	DecSolver* solver = dynamic_cast<DecSolver*>(model->getSolver());
 	DspParams* par = model->getParPtr();
 	double relTol = 0.0001;//par->getDblParam("DW/GAPTOL");
 

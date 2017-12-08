@@ -47,7 +47,7 @@ DSP_RTN_CODE PSCGModel::solve() {
 	case DSP_STAT_LIM_ITERorTIME: {
 
 		primobj_ = pscgSolver_->getPrimalObjective();
-		dualobj_ = -pscgSolver_->getBestDualObjective();
+		dualobj_ = pscgSolver_->getBestDualObjective();
 
 		if (primobj_ < 1.0e+20) {
 			/** parse solution */
