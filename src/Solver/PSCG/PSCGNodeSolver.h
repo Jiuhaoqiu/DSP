@@ -77,6 +77,8 @@ public:
 
 	/** set primal solution */
 	void setPrimalSolution(const double* solution);
+	
+    void findNewBranchInfo(int &br_rank, int &br_scen, int &br_index, double &br_lb, double &br_val, double &br_ub); 
 
 protected:
 

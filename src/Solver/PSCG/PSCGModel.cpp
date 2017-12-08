@@ -118,6 +118,14 @@ bool PSCGModel::chooseBranchingObjects(
 	DspBranchPSCG *branchingDn = dynamic_cast<DspBranchPSCG*>(branchingDnBase);
 	FREE_PTR(branchingUp)
 	FREE_PTR(branchingDn)
+	branchingUp = new DspBranchPSCG(*(dynamic_cast<const DspBranchPSCG*>(currentBranchObj_)) );
+	branchingDn = new DspBranchPSCG(*(dynamic_cast<const DspBranchPSCG*>(currentBranchObj_)) );
+	int br_rank=-1, br_scen=-1, br_index=-1;
+	double br_lb=0.0, br_val=0.0, br_ub=0.0;
+
+	pscgSolver_->findNewBranchInfo(br_rank, br_scen, br_index, br_lb, br_val, br_ub); 
+	branchingUp->addbranch(br_rank, br_scen, br_index, br_val, br_ub);
+	branchingDn->addbranch(br_rank, br_scen, br_index, br_lb, br_val); 
 #if 0
 
 	/** cleanup */

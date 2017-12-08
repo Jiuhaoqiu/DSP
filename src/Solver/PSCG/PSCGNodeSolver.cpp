@@ -148,6 +148,15 @@ void PSCGNodeSolver::setPrimalSolution(const double* solution) {
 	primsol_.assign(solution, solution+ncols_orig_);
 }
 
+void PSCGNodeSolver::findNewBranchInfo(int &br_rank, int &br_scen, int &br_index, double &br_lb, double &br_val, double &br_ub){
+    BranchingVarInfo brInfo = pscg_->findBranchingIndex();
+    br_rank = brInfo.rank;
+    br_scen = brInfo.scen;
+    br_index = brInfo.index;
+    br_val = brInfo.brVal;
+    br_lb = brInfo.brLB;
+    br_ub = brInfo.brUB;
+} 
 
 void PSCGNodeSolver::setBranchingObjects(const DspBranch* branchobj) {
 	/** shouldn't be null */

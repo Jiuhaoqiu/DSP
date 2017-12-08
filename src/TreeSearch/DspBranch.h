@@ -31,6 +31,10 @@ public:
 	}
 	~DspBranch(){;}
 	virtual void push_back(int index, double lb, double ub) {
+		index_.push_back(index);
+		lb_.push_back(lb);
+		ub_.push_back(ub);
+#if 0
 		int iii;
 		for(iii=0; iii<index_.size(); iii++){
 		    if(index_[iii]==index) break;
@@ -45,6 +49,8 @@ public:
 		    lb_.push_back(lb);
 		    ub_.push_back(ub);
 		}
+		return iii;
+#endif
 	}
 };
 

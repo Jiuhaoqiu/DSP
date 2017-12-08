@@ -9,7 +9,7 @@
 #define SRC_SOLVER_PSCG_PSCGMODEL_H_
 
 #include <TreeSearch/DspModel.h>
-#include <PSCG.h>
+//#include <PSCG.h>
 #include <Solver/PSCG/PSCGNodeSolver.h>
 
 class PSCGModel: public DspModel {
