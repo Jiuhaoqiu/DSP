@@ -13,11 +13,11 @@
 //struct DspBranch {
 class DspBranchPSCG : public DspBranch{
     public:
-	std::vector<double*> &dualsol_;
-	int mpiRank;
-	int spNo;
+	std::vector<int> mpiRanks;
+	std::vector<int> spIndices;
+	std::vector<double*> dualsol_;
 
-	DspBranchPSCG(std::vector<double*> &omega):DspBranch(), dualsol_(omega){;}
+	DspBranchPSCG():DspBranch(){;}
 	~DspBranchPSCG(){;}
 };
 

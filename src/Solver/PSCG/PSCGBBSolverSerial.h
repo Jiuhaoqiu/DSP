@@ -36,8 +36,6 @@ public:
 	/** finalize */
 	virtual DSP_RTN_CODE finalize();
 
-	virtual void setBranchingObjects(const DspBranch* branchobj);
-
 protected:
 
 	PSCGNodeSolver* nodeSolver_;

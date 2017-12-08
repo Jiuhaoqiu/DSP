@@ -70,7 +70,7 @@ public:
     DSP_RTN_CODE switchToPhase2();
 
 	/** set branching objects */
-	virtual void setBranchingObjects(const DspBranchPSCG* branchobj);
+	virtual void setBranchingObjects(const DspBranch* branchobj);
 
 	/** set best primal solution */
 	void setBestPrimalSolution(const double* solution);

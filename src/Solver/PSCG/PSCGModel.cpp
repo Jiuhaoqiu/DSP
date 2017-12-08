@@ -34,12 +34,12 @@ DSP_RTN_CODE PSCGModel::solve() {
 #if 1
 
 	/** set best primal objective value */
-	solver_->setBestPrimalObjective(bestprimobj_);
+	pscgSolver_->setBestPrimalObjective(bestprimobj_);
 
-	/** solve master */
-	solver_->solve();
+	/** solve node subproblem */
+	pscgSolver_->solve();
 
-	status_ = solver_->getStatus();
+	status_ = pscgSolver_->getStatus();
 
 	switch (status_) {
 	case DSP_STAT_OPTIMAL:
@@ -110,25 +110,17 @@ DSP_RTN_CODE PSCGModel::solve() {
 }
 
 bool PSCGModel::chooseBranchingObjects(
-		DspBranch*& branchingUp, /**< [out] branching-up object */
-		DspBranch*& branchingDn  /**< [out] branching-down object */) {
-#if 0
-	int findPhase = 0;
-	bool branched = false;
-	double dist, maxdist = 1.0e-6;
-	int branchingIndex = -1;
-	double branchingValue;
-
-	/** smip branching */
-	int ncols_first_stage = -1;   /**< number of first-stage columns in dd form */
-	int branchingFirstStage = -1; /**< branching index in first stage */
-	TssModel* tss = NULL;
-
+		DspBranch*& branchingUpBase, /**< [out] branching-up object */
+		DspBranch*& branchingDnBase  /**< [out] branching-down object */) {
+	bool branched=false;
 	BGN_TRY_CATCH
-
-	/** cleanup */
+	DspBranchPSCG *branchingUp = dynamic_cast<DspBranchPSCG*>(branchingUpBase);
+	DspBranchPSCG *branchingDn = dynamic_cast<DspBranchPSCG*>(branchingDnBase);
 	FREE_PTR(branchingUp)
 	FREE_PTR(branchingDn)
+#if 0
+
+	/** cleanup */
 
 	if (solver_->getModelPtr()->isStochastic()) {
 		/** two-stage stochastic model */
@@ -204,10 +196,9 @@ bool PSCGModel::chooseBranchingObjects(
 		DSPdebugMessage("No branch object is found.\n");
 	}
 
+#endif
 	END_TRY_CATCH_RTN(;,false)
 
 	return branched;
-#endif
-	return false;
 }
 

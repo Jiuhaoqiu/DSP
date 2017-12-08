@@ -27,10 +27,10 @@ public:
 	virtual DSP_RTN_CODE init();
 
 	/** solve */
-	virtual DSP_RTN_CODE solve();
+	//virtual DSP_RTN_CODE solve(); //exactly as in serial case
 
 	/** finalize */
-	virtual DSP_RTN_CODE finalize();
+	//virtual DSP_RTN_CODE finalize(); //exactly as in serial case
 
 protected:
 

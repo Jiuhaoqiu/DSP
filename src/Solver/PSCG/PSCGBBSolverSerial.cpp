@@ -29,12 +29,12 @@ DSP_RTN_CODE PSCGBBSolverSerial::init() {
 	/** create node solver */
 	nodeSolver_ = new PSCGNodeSolver(model_,par_,message_,pscgSolver_);
 
+	alps_ = new PSCGModel(nodeSolver_);
 #if 0
 	/** initialize master */
 	DSP_RTN_CHECK_THROW(master_->init());
 
 	/** create an Alps model */
-	alps_ = new PSCGModel(master_);
 
 	/** parameter setting */
 	DspParams* par = alps_->getSolver()->getParPtr();
@@ -50,12 +50,12 @@ DSP_RTN_CODE PSCGBBSolverSerial::init() {
 }
 
 DSP_RTN_CODE PSCGBBSolverSerial::solve() {
-#if 0
+#if 1
 	BGN_TRY_CATCH
 
 	/** solve */
 	AlpsKnowledgeBrokerSerial alpsBroker(0, NULL, *alps_);
-    alpsBroker.search(alps_);
+    	alpsBroker.search(alps_);
 
 //    DspNodeSolution* solution = dynamic_cast<DspNodeSolution*>(alpsBroker.getBestKnowledge(AlpsKnowledgeTypeSolution).first);
 //    solution->print(std::cout);
@@ -76,6 +76,3 @@ DSP_RTN_CODE PSCGBBSolverSerial::finalize() {
 #endif
 	return DSP_RTN_OK;
 }
-
-void PSCGBBSolverSerial::setBranchingObjects(const DspBranch* branchobj){;}
-

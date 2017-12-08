@@ -73,6 +73,7 @@ cout << "Number of scenarios: " << nS << endl;
 	 n1 = dynamic_cast<DecTssModel*>(getModelPtr(env))->getNumCols(0);
 	 n2 = dynamic_cast<DecTssModel*>(getModelPtr(env))->getNumCols(1);
 cout << "Number of vars: " << n1 << " + " << n2 << endl;
+#if 0
 	int *proc_idx = new int[nS];
 	int proc_idx_size=0;
 	for(int ii=mpiRank; ii<nS; ii+=mpiSize){ 
@@ -81,6 +82,7 @@ cout << "Number of vars: " << n1 << " + " << n2 << endl;
 	}
 	setIntPtrParam(env, "ARR_PROC_IDX", proc_idx_size, proc_idx);
 	delete [] proc_idx;
+#endif
 	solvePSCGMpi(env, MPI_COMM_WORLD);
 
 

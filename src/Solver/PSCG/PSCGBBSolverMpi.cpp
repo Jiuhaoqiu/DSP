@@ -32,11 +32,13 @@ DSP_RTN_CODE PSCGBBSolverMpi::init() {
 	/** create PSCG solver */
 	pscgSolver_ = new PSCG( *(dynamic_cast<DecTssModel*>(model_)),comm_);
 
-	pscgSolver_->computeBound();
+	//pscgSolver_->computeBound();
 
 	/** create node solver */
 	nodeSolver_ = new PSCGNodeSolver(model_,par_,message_,pscgSolver_);
 
+	/** create an Alps model */
+	alps_ = new PSCGModel(nodeSolver_);
 #if 0
 
 	if (comm_rank_ == 0) {
@@ -46,8 +48,6 @@ DSP_RTN_CODE PSCGBBSolverMpi::init() {
 		/** initialize master */
 		DSP_RTN_CHECK_THROW(master_->init());
 
-		/** create an Alps model */
-		alps_ = new PSCGModel(master_);
 
 		/** parameter setting */
 		DspParams* par = alps_->getSolver()->getParPtr();
@@ -63,9 +63,13 @@ DSP_RTN_CODE PSCGBBSolverMpi::init() {
 	return DSP_RTN_OK;
 }
 
-DSP_RTN_CODE PSCGBBSolverMpi::solve() {
 #if 0
+DSP_RTN_CODE PSCGBBSolverMpi::solve() {
 	BGN_TRY_CATCH
+	AlpsKnowledgeBrokerSerial alpsBroker(0, NULL, *alps_);
+    	alpsBroker.search(alps_);
+	
+#if 0
 	if (comm_rank_ == 0) {
 
 		/** solve */
@@ -82,8 +86,8 @@ DSP_RTN_CODE PSCGBBSolverMpi::solve() {
 	} else {
 		DSP_RTN_CHECK_THROW(dynamic_cast<PSCGWorkerMpi*>(worker_)->receiver());
 	}
-	END_TRY_CATCH_RTN(;,DSP_RTN_ERR)
 #endif
+	END_TRY_CATCH_RTN(;,DSP_RTN_ERR)
 	return DSP_RTN_OK;
 }
 
@@ -96,3 +100,4 @@ DSP_RTN_CODE PSCGBBSolverMpi::finalize() {
 #endif
 	return DSP_RTN_OK;
 }
+#endif
