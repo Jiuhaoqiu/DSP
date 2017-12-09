@@ -43,7 +43,7 @@ public:
 			AlpsNodeDesc(m),
 			branchdir_(branchdir),
 			branchobj_(branchobj) {
-		branchobj = NULL;
+		branchobj = NULL; 
 	}
 
 	/** default destructor */

@@ -47,6 +47,7 @@ DSP_RTN_CODE PSCGModel::solve() {
 	case DSP_STAT_LIM_ITERorTIME: {
 
 		primobj_ = pscgSolver_->getPrimalObjective();
+		if(primobj_ >= 1.0e+20) primobj_= 9.99e+19;
 		dualobj_ = pscgSolver_->getBestDualObjective();
 
 		if (primobj_ < 1.0e+20) {
@@ -113,19 +114,27 @@ bool PSCGModel::chooseBranchingObjects(
 		DspBranch*& branchingUpBase, /**< [out] branching-up object */
 		DspBranch*& branchingDnBase  /**< [out] branching-down object */) {
 	bool branched=false;
-	BGN_TRY_CATCH
 	DspBranchPSCG *branchingUp = dynamic_cast<DspBranchPSCG*>(branchingUpBase);
 	DspBranchPSCG *branchingDn = dynamic_cast<DspBranchPSCG*>(branchingDnBase);
+	BGN_TRY_CATCH
 	FREE_PTR(branchingUp)
 	FREE_PTR(branchingDn)
-	branchingUp = new DspBranchPSCG(*(dynamic_cast<const DspBranchPSCG*>(currentBranchObj_)) );
-	branchingDn = new DspBranchPSCG(*(dynamic_cast<const DspBranchPSCG*>(currentBranchObj_)) );
+	//branchingUp = new DspBranchPSCG(*(dynamic_cast<const DspBranchPSCG*>(currentBranchObj_)) ); //TODO
+	//branchingDn = new DspBranchPSCG(*(dynamic_cast<const DspBranchPSCG*>(currentBranchObj_)) ); //TODO
 	int br_rank=-1, br_scen=-1, br_index=-1;
 	double br_lb=0.0, br_val=0.0, br_ub=0.0;
 
 	pscgSolver_->findNewBranchInfo(br_rank, br_scen, br_index, br_lb, br_val, br_ub); 
-	branchingUp->addbranch(br_rank, br_scen, br_index, br_val, br_ub);
-	branchingDn->addbranch(br_rank, br_scen, br_index, br_lb, br_val); 
+        if(br_index >=0){
+	    branchingUp = pscgSolver_->generateCurrentBranchingInfo();
+	    branchingDn = pscgSolver_->generateCurrentBranchingInfo();
+	    branchingUp->addbranch(br_rank, br_scen, br_index, ceil(br_val), br_ub);
+	    branchingDn->addbranch(br_rank, br_scen, br_index, br_lb, floor(br_val)); 
+	    branched=true;
+	}
+	else{
+	    branched=false;
+	}
 #if 0
 
 	/** cleanup */
@@ -206,6 +215,11 @@ bool PSCGModel::chooseBranchingObjects(
 
 #endif
 	END_TRY_CATCH_RTN(;,false)
+std::cout << "Done choosing two branching objects" << endl;
+	branchingUp->printBranchBounds();
+	branchingDn->printBranchBounds();
+	branchingUpBase=branchingUp;
+	branchingDnBase=branchingDn;
 
 	return branched;
 }

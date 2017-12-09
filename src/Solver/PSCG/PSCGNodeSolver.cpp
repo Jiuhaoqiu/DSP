@@ -169,11 +169,20 @@ void PSCGNodeSolver::findNewBranchInfo(int &br_rank, int &br_scen, int &br_index
     br_ub = brInfo.brUB;
 } 
 
+DspBranchPSCG * PSCGNodeSolver::generateCurrentBranchingInfo(){ //returns a newly allocated DspBranchPSCG*
+    DspBranchPSCG *retval = new DspBranchPSCG();
+    int nBounds = pscg_->branchingBDs_.inds.size();
+    for(int ii=0; ii<nBounds; ii++){
+	retval->addbranch(pscg_->branchingBDs_.ranks[ii],pscg_->branchingBDs_.sps[ii], pscg_->branchingBDs_.inds[ii],pscg_->branchingBDs_.lbs[ii],pscg_->branchingBDs_.ubs[ii]);
+    }
+    return retval;
+}
+
 void PSCGNodeSolver::setBranchingObjects(const DspBranch* branchobj) {
 	/** shouldn't be null */
 	assert(branchobj != NULL);
 	const DspBranchPSCG *br = dynamic_cast<const DspBranchPSCG*>(branchobj);
-	int nBranchObjs = branchobj->index_.size();
+	int nBranchObjs = br->index_.size();
 	pscg_->restoreOriginalVarBounds();
 	for(int ii=0; ii<nBranchObjs; ii++){
 	    pscg_->addBranchVarBd(br->mpiRanks_[ii],br->spIndices_[ii],br->index_[ii],br->lb_[ii],br->ub_[ii]);

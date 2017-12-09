@@ -64,7 +64,6 @@ public:
     void setBestPrimalObjective(double val) {bestprimobj_=val;}
     void setBranchingObjects(const DspBranch* branchobj) {
     	solver_->setBranchingObjects(branchobj);
-	currentBranchObj_=branchobj;
     }
 
 protected:
@@ -91,7 +90,6 @@ protected:
     double dualobj_;
     std::vector<double> bestprimsol_; /**< integer feasible primal solution */
     std::vector<double> primsol_; /**< primal solution (may not be integer feasible) */
-    const DspBranch* currentBranchObj_; /*Helpful reference to have to aid in construction of new branching objects*/
 };
 
 #endif /* SRC_TREESEARCH_DSPMODEL_H_ */
