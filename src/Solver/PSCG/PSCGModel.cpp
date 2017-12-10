@@ -46,9 +46,10 @@ DSP_RTN_CODE PSCGModel::solve() {
 	case DSP_STAT_FEASIBLE:
 	case DSP_STAT_LIM_ITERorTIME: {
 
-		primobj_ = pscgSolver_->getPrimalObjective();
+		bestprimobj_ = pscgSolver_->getBestPrimalObjective();
 		if(primobj_ >= 1.0e+20) primobj_= 9.99e+19;
-		dualobj_ = pscgSolver_->getBestDualObjective();
+		bestdualobj_ = pscgSolver_->getBestDualObjective();
+		dualobj_ = bestdualobj_; 
 
 		if (primobj_ < 1.0e+20) {
 			/** parse solution */
@@ -130,6 +131,8 @@ bool PSCGModel::chooseBranchingObjects(
 	    branchingDn = pscgSolver_->generateCurrentBranchingInfo();
 	    branchingUp->addbranch(br_rank, br_scen, br_index, ceil(br_val), br_ub);
 	    branchingDn->addbranch(br_rank, br_scen, br_index, br_lb, floor(br_val)); 
+	    branchingUp->bestBound_ = pscgSolver_->getBestDualObjective();
+	    branchingDn->bestBound_ = pscgSolver_->getBestDualObjective();
 	    branched=true;
 	}
 	else{

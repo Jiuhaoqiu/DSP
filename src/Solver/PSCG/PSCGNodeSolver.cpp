@@ -88,19 +88,23 @@ DSP_RTN_CODE PSCGNodeSolver::init() {
 
 DSP_RTN_CODE PSCGNodeSolver::solve() {
 	BGN_TRY_CATCH
-	pscg_->setMaxNoSteps(20);
+	pscg_->setMaxNoSteps(40);
 	pscg_->computeBound();
 	if(pscg_->statusIsFeasible()){ 
 	    status_=DSP_STAT_FEASIBLE;
 	    dualobj_=pscg_->getLagrBound();
+	    bestdualobj_=dualobj_;
 	    primobj_=pscg_->getPrimalObjVal();
 	}
+#if 0
 	if(dualobj_ > bestdualobj_){
 	    bestdualobj_ = dualobj_;
 	}
+#endif
 	if(primobj_ < bestprimobj_){
 	    bestprimobj_ = primobj_;
 	}
+cout << "After processing this node: LB: " << bestdualobj_ << " and UB: " << bestprimobj_ << endl;
 #if 0
 
 	itercnt_ = 0;
