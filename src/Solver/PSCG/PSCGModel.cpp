@@ -10,12 +10,14 @@
 #include <PSCG/PSCGModel.h>
 //#include <PSCG/PSCGHeuristic.h>
 #include "Model/TssModel.h"
+#include <AlpsKnowledgeBroker.h>
 
 PSCGModel::PSCGModel(): DspModel(){}
 
 PSCGModel::PSCGModel(DecSolver* solver): DspModel(solver){
 	pscgSolver_ = dynamic_cast<PSCGNodeSolver*>(solver);
 	primsol_.resize(pscgSolver_->ncols_orig_);
+	mpiRank_=pscgSolver_->getMPIRank();
 #if 0
 	//heuristics_.push_back(new DwRounding("Rounding", *this));
 	heuristics_.push_back(new DwSmip("Smip", *this));
@@ -30,6 +32,9 @@ PSCGModel::~PSCGModel() {
 }
 
 DSP_RTN_CODE PSCGModel::solve() {
+	if(pscgSolver_->getMPIRank()==0){
+	    cout << "LB: " << getKnowledgeBroker()->getBestNode()->getQuality() << " and UB: " << getKnowledgeBroker()->getIncumbentValue() << endl;
+	}
 	BGN_TRY_CATCH
 #if 1
 
@@ -37,6 +42,8 @@ DSP_RTN_CODE PSCGModel::solve() {
 	pscgSolver_->setBestPrimalObjective(bestprimobj_);
 
 	/** solve node subproblem */
+        int treeDepth=getKnowledgeBroker()->getTreeDepth();
+        pscgSolver_->setTCritParam(pow(0.5,treeDepth));
 	pscgSolver_->solve();
 
 	status_ = pscgSolver_->getStatus();
@@ -47,6 +54,7 @@ DSP_RTN_CODE PSCGModel::solve() {
 	case DSP_STAT_LIM_ITERorTIME: {
 
 		bestprimobj_ = pscgSolver_->getBestPrimalObjective();
+		primobj_=bestprimobj_;
 		if(primobj_ >= 1.0e+20) primobj_= 9.99e+19;
 		bestdualobj_ = pscgSolver_->getBestDualObjective();
 		dualobj_ = bestdualobj_; 
@@ -117,25 +125,45 @@ bool PSCGModel::chooseBranchingObjects(
 	bool branched=false;
 	DspBranchPSCG *branchingUp = dynamic_cast<DspBranchPSCG*>(branchingUpBase);
 	DspBranchPSCG *branchingDn = dynamic_cast<DspBranchPSCG*>(branchingDnBase);
+	int br_rank=-1, br_scen=-1, br_index=-1;
+	double br_val=0.0, br_lbUp=0.0, br_ubUp=0.0, br_lbDn=0.0, br_ubDn=0.0;
 	BGN_TRY_CATCH
 	FREE_PTR(branchingUp)
 	FREE_PTR(branchingDn)
 	//branchingUp = new DspBranchPSCG(*(dynamic_cast<const DspBranchPSCG*>(currentBranchObj_)) ); //TODO
 	//branchingDn = new DspBranchPSCG(*(dynamic_cast<const DspBranchPSCG*>(currentBranchObj_)) ); //TODO
-	int br_rank=-1, br_scen=-1, br_index=-1;
-	double br_lb=0.0, br_val=0.0, br_ub=0.0;
 
-	pscgSolver_->findNewBranchInfo(br_rank, br_scen, br_index, br_lb, br_val, br_ub); 
+	pscgSolver_->findNewBranchInfo(br_rank, br_scen, br_index, br_val, br_lbUp, br_ubUp, br_lbDn, br_ubDn); 
         if(br_index >=0){
 	    branchingUp = pscgSolver_->generateCurrentBranchingInfo();
 	    branchingDn = pscgSolver_->generateCurrentBranchingInfo();
-	    branchingUp->addbranch(br_rank, br_scen, br_index, ceil(br_val), br_ub);
-	    branchingDn->addbranch(br_rank, br_scen, br_index, br_lb, floor(br_val)); 
+#if 0
+	if(pscgSolver_->getMPIRank()==0){
+	      std::cout << br_lbUp << "," << br_ubUp << std::endl;
+	}
+#endif
+	    branchingUp->addbranch(br_rank, br_scen, br_index, br_lbUp, br_ubUp);
+#if 0
+	if(pscgSolver_->getMPIRank()==0){
+	      std::cout << br_lbDn << "," << br_ubDn << std::endl;
+	}
+#endif
+	    branchingDn->addbranch(br_rank, br_scen, br_index, br_lbDn, br_ubDn); 
 	    branchingUp->bestBound_ = pscgSolver_->getBestDualObjective();
 	    branchingDn->bestBound_ = pscgSolver_->getBestDualObjective();
+	    branchingUpBase=branchingUp;
+	    branchingDnBase=branchingDn;
+
+	    if(pscgSolver_->getMPIRank()==0){
+	      std::cout << "Done choosing two branching objects" << endl;
+	      branchingUp->printBranchBounds();
+	      branchingDn->printBranchBounds();
+	    }
 	    branched=true;
 	}
 	else{
+	    branchingUpBase=NULL;
+	    branchingDnBase=NULL;
 	    branched=false;
 	}
 #if 0
@@ -218,11 +246,6 @@ bool PSCGModel::chooseBranchingObjects(
 
 #endif
 	END_TRY_CATCH_RTN(;,false)
-std::cout << "Done choosing two branching objects" << endl;
-	branchingUp->printBranchBounds();
-	branchingDn->printBranchBounds();
-	branchingUpBase=branchingUp;
-	branchingDnBase=branchingDn;
 
 	return branched;
 }

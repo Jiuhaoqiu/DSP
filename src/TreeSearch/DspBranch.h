@@ -31,26 +31,35 @@ public:
 	}
 	~DspBranch(){;}
 	virtual void push_back(int index, double lb, double ub) {
+#if 1
 		index_.push_back(index);
 		lb_.push_back(lb);
 		ub_.push_back(ub);
+#endif
 #if 0
-		int iii;
+		int jjj=-1
 		for(iii=0; iii<index_.size(); iii++){
-		    if(index_[iii]==index) break;
+		    if(index_[iii]==index){ 
+			jjj=iii;
+			break;
+		    }
 		}
-		if(iii<index_.size()){
-		    assert(index_[iii]==index);
-		    lb_[iii] = lb;
-		    ub_[iii] = ub;
+		if(jjj!=-1){
+		    assert(index_[jjj]==index);
+		    lb_[jjj] = lb;
+		    ub_[jjj] = ub;
 		}
 		else{
 		    index_.push_back(index);
 		    lb_.push_back(lb);
 		    ub_.push_back(ub);
 		}
-		return iii;
+		return jjj;
 #endif
+	}
+        virtual void modify_bound(int jjj, double lb, double ub){
+	    lb_[jjj]=lb;
+	    ub_[jjj]=ub;
 	}
 };
 

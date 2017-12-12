@@ -101,8 +101,8 @@ int DspTreeNode::process(bool isRoot, bool rampUp) {
 	case DSP_STAT_LIM_ITERorTIME: {
 		double curUb = model->getPrimalObjective();
 
-		printf("[%f] curLb %.8e, curUb %.8e, bestUb %.8e, bestLb %.8e\n",
-			getKnowledgeBroker()->timer().getWallClock(), model->getDualObjective(), curUb, gUb, gLb);
+		if(model->getMPIRank()==0){printf("[%f] curLb %.8e, curUb %.8e, bestUb %.8e, bestLb %.8e\n",
+			getKnowledgeBroker()->timer().getWallClock(), model->getDualObjective(), curUb, gUb, gLb);}
 
 		log_dualobjs_.open(par->getStrParam("DW/LOGFILE/OBJS").c_str(), ios::app);
 		if (isRoot) {

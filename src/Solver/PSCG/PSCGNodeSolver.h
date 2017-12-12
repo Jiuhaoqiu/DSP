@@ -77,10 +77,14 @@ public:
 
 	/** set primal solution */
 	void setPrimalSolution(const double* solution);
+
+    void setTCritParam(double val){tCritParam_=val;}
 	
-    void findNewBranchInfo(int &br_rank, int &br_scen, int &br_index, double &br_lb, double &br_val, double &br_ub); 
+    void findNewBranchInfo(int &br_rank, int &br_scen, int &br_index, double &br_val, double &br_lbUp, double &br_ubUp, double &br_lbDn, double &br_ubDn); 
    
     DspBranchPSCG * generateCurrentBranchingInfo(); //returns a newly allocated DspBranchPSCG*
+ 
+    int getMPIRank(){return pscg_->getMPIRank();}
 
 protected:
 
@@ -187,6 +191,7 @@ protected:
     std::vector<int> auxcolindices_;
 
     PSCG* pscg_; /**< subproblem solver */
+    double tCritParam_;
 
     const double feastol_ = 1.0e-5;
 

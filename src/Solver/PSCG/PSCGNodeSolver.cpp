@@ -28,7 +28,7 @@ DecSolver(model,par,message),pscg_(pscg)
 
 PSCGNodeSolver::PSCGNodeSolver(const PSCGNodeSolver& rhs):
 DecSolver(rhs),
-pscg_(rhs.pscg_){
+pscg_(rhs.pscg_),tCritParam_(1e-8){
 }
 
 /** copy operator */
@@ -88,13 +88,22 @@ DSP_RTN_CODE PSCGNodeSolver::init() {
 
 DSP_RTN_CODE PSCGNodeSolver::solve() {
 	BGN_TRY_CATCH
-	pscg_->setMaxNoSteps(40);
+        pscg_->setMaxNoConseqNullSteps(100);
+        pscg_->setTCritParam(min( 1e-2,max( tCritParam_, 1e-8)));
+	pscg_->setMaxNoSteps(300);
+	pscg_->setCutoffLagrBD(bestprimobj_);
 	pscg_->computeBound();
 	if(pscg_->statusIsFeasible()){ 
 	    status_=DSP_STAT_FEASIBLE;
 	    dualobj_=pscg_->getLagrBound();
 	    bestdualobj_=dualobj_;
 	    primobj_=pscg_->getPrimalObjVal();
+	}
+	else{
+	    status_ = DSP_STAT_PRIM_INFEASIBLE;
+	    dualobj_=COIN_DBL_MAX;
+	    bestdualobj_=COIN_DBL_MAX;
+	    primobj_=COIN_DBL_MAX;
 	}
 #if 0
 	if(dualobj_ > bestdualobj_){
@@ -104,7 +113,6 @@ DSP_RTN_CODE PSCGNodeSolver::solve() {
 	if(primobj_ < bestprimobj_){
 	    bestprimobj_ = primobj_;
 	}
-cout << "After processing this node: LB: " << bestdualobj_ << " and UB: " << bestprimobj_ << endl;
 #if 0
 
 	itercnt_ = 0;
@@ -163,14 +171,17 @@ void PSCGNodeSolver::setPrimalSolution(const double* solution) {
 	primsol_.assign(solution, solution+ncols_orig_);
 }
 
-void PSCGNodeSolver::findNewBranchInfo(int &br_rank, int &br_scen, int &br_index, double &br_lb, double &br_val, double &br_ub){
-    BranchingVarInfo brInfo = pscg_->findBranchingIndex();
+void PSCGNodeSolver::findNewBranchInfo(int &br_rank, int &br_scen, int &br_index, double &br_val, double &br_lbUp, double &br_ubUp, double &br_lbDn, double &br_ubDn){
+    //BranchingVarInfo brInfo = pscg_->findBranchingIndex();
+    BranchingVarInfo brInfo = pscg_->getBranchingVarInfo();
     br_rank = brInfo.rank;
     br_scen = brInfo.scen;
     br_index = brInfo.index;
     br_val = brInfo.brVal;
-    br_lb = brInfo.brLB;
-    br_ub = brInfo.brUB;
+    br_lbUp = brInfo.brLBUp;
+    br_ubUp = brInfo.brUBUp;
+    br_lbDn = brInfo.brLBDn;
+    br_ubDn = brInfo.brUBDn;
 } 
 
 DspBranchPSCG * PSCGNodeSolver::generateCurrentBranchingInfo(){ //returns a newly allocated DspBranchPSCG*
@@ -186,6 +197,10 @@ void PSCGNodeSolver::setBranchingObjects(const DspBranch* branchobj) {
 	/** shouldn't be null */
 	assert(branchobj != NULL);
 	const DspBranchPSCG *br = dynamic_cast<const DspBranchPSCG*>(branchobj);
+	if(getMPIRank()==0){
+	    std::cout << "Using these bounds: " << endl;
+	    br->printBranchBounds();
+	}
 	int nBranchObjs = br->index_.size();
 	pscg_->restoreOriginalVarBounds();
 	for(int ii=0; ii<nBranchObjs; ii++){

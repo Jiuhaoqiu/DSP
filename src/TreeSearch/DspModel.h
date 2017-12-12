@@ -52,6 +52,7 @@ public:
     double getDualObjective() {return dualobj_;}
     std::vector<double>& getBestPrimalSolution() {return bestprimsol_;}
     std::vector<double>& getPrimalSolution() {return primsol_;}
+    int getMPIRank(){return mpiRank_;}
 
     virtual bool chooseBranchingObjects(
     			DspBranch*& branchingUp, /**< [out] branching-up object */
@@ -90,6 +91,7 @@ protected:
     double dualobj_;
     std::vector<double> bestprimsol_; /**< integer feasible primal solution */
     std::vector<double> primsol_; /**< primal solution (may not be integer feasible) */
+    int mpiRank_;
 };
 
 #endif /* SRC_TREESEARCH_DSPMODEL_H_ */
