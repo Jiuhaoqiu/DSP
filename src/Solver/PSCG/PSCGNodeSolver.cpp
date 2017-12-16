@@ -89,8 +89,8 @@ DSP_RTN_CODE PSCGNodeSolver::init() {
 DSP_RTN_CODE PSCGNodeSolver::solve() {
 	BGN_TRY_CATCH
         pscg_->setMaxNoConseqNullSteps(100);
-        pscg_->setTCritParam(min( 1e-2,max( tCritParam_, 1e-8)));
-	pscg_->setMaxNoSteps(300);
+        pscg_->setTCritParam(max( tCritParam_, 1e-10));
+	pscg_->setMaxNoSteps(1000);
 	pscg_->setCutoffLagrBD(bestprimobj_);
 	pscg_->computeBound();
 	if(pscg_->statusIsFeasible()){ 
@@ -206,6 +206,7 @@ void PSCGNodeSolver::setBranchingObjects(const DspBranch* branchobj) {
 	for(int ii=0; ii<nBranchObjs; ii++){
 	    pscg_->addBranchVarBd(br->mpiRanks_[ii],br->spIndices_[ii],br->index_[ii],br->lb_[ii],br->ub_[ii]);
 	}
+	pscg_->readOmegaIntoModel(br->dualsol_);
 	//read omega into pscg_
 	//set best Lagr bound into pscg_
 #if 0

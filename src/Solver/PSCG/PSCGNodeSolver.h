@@ -86,6 +86,10 @@ public:
  
     int getMPIRank(){return pscg_->getMPIRank();}
 
+    void writeOmega(vector<double*> &writtenOmega){
+	pscg_->writeOmegaCurrent(writtenOmega);
+    }
+
 protected:
 
 #if 0

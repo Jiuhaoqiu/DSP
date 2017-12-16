@@ -151,6 +151,9 @@ bool PSCGModel::chooseBranchingObjects(
 	    branchingDn->addbranch(br_rank, br_scen, br_index, br_lbDn, br_ubDn); 
 	    branchingUp->bestBound_ = pscgSolver_->getBestDualObjective();
 	    branchingDn->bestBound_ = pscgSolver_->getBestDualObjective();
+		
+	    pscgSolver_->writeOmega(branchingUp->dualsol_);
+	    pscgSolver_->writeOmega(branchingDn->dualsol_);
 	    branchingUpBase=branchingUp;
 	    branchingDnBase=branchingDn;
 

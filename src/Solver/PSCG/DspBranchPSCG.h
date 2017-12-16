@@ -27,6 +27,9 @@ class DspBranchPSCG : public DspBranch{
 	    std::copy(rhs.dualsol_.begin(),rhs.dualsol_.end(),dualsol_.begin());
 	}
 	~DspBranchPSCG(){
+	    for(int ii=0; ii<dualsol_.size(); ii++){
+		if(dualsol_[ii]!=NULL) delete [] dualsol_[ii];
+	    }
 	}
 	void addbranch(int br_rank, int br_scen, int br_index, double br_lb, double br_ub){
 	   int jjj=-1;
