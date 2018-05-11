@@ -78,7 +78,12 @@ public:
 	/** set primal solution */
 	void setPrimalSolution(const double* solution);
 
-    void setTCritParam(double val){tCritParam_=val;}
+    void setTCritParam(double val){
+	tCritParam_=val;
+	pscg_->setTCritParam(val);
+    }
+    void setRho(double rho){pscg_->setRho(rho);}
+    void setMaxNoSteps(int maxSteps){pscg_->setMaxNoSteps(maxSteps);}
 	
     void findNewBranchInfo(int &br_rank, int &br_scen, int &br_index, double &br_val, double &br_lbUp, double &br_ubUp, double &br_lbDn, double &br_ubDn); 
    

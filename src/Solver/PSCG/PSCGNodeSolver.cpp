@@ -89,8 +89,14 @@ DSP_RTN_CODE PSCGNodeSolver::init() {
 DSP_RTN_CODE PSCGNodeSolver::solve() {
 	BGN_TRY_CATCH
         pscg_->setMaxNoConseqNullSteps(100);
-        pscg_->setTCritParam(max( tCritParam_, 1e-10));
-	pscg_->setMaxNoSteps(1000);
+        //pscg_->setTCritParam(max( tCritParam_, 1e-10));
+	pscg_->setPhase(0);
+        pscg_->setTCritParam(1e-10);
+	pscg_->setMaxNoSteps(100);
+        pscg_->setMaxNoGSSteps(20);
+        pscg_->setMaxNoInnerSteps(5);
+        pscg_->setBaselineRho(1);
+        pscg_->setRho(1);
 	pscg_->setCutoffLagrBD(bestprimobj_);
 	pscg_->computeBound();
 	if(pscg_->statusIsFeasible()){ 

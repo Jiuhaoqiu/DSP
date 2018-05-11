@@ -43,7 +43,10 @@ DSP_RTN_CODE PSCGModel::solve() {
 
 	/** solve node subproblem */
         int treeDepth=getKnowledgeBroker()->getTreeDepth();
+        //pscgSolver_->setTCritParam(pow(0.5,treeDepth));
         pscgSolver_->setTCritParam(pow(0.5,treeDepth));
+	pscgSolver_->setRho(100);
+	pscgSolver_->setMaxNoSteps(20 + 5*treeDepth);
 	pscgSolver_->solve();
 
 	status_ = pscgSolver_->getStatus();
