@@ -53,7 +53,8 @@ DSPLIBS = -L$(DSPDIR)/build/lib -lDsp
 
 CPLEXLIBR = -DIL_STD $(CPPFLAGS) $(LDFLAGS) -L$(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT) -lilocplex -lcplex -L$(CONCERTDIR)/lib/$(SYSTEM)/$(LIBFORMAT) -lconcert 
 
-PSCGLIBR = -L$(PSCGDIR)/lib -lPSCG
+PSCGLIBR = 
+#-L$(PSCGDIR)/lib -lPSCG
 
 OTHERLIBS = -lstdc++ -lm -lpthread -lz -lbz2
 #OTHERLIBS = -lstdc++ -lgcc_s -lc -lgcc -lm -lpthread

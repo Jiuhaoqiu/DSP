@@ -1,0 +1,2 @@
+cp ~/comp_infrastructure/PSCG/src/*.h ./include/pscg
+cp ~/comp_infrastructure/PSCG/lib/libPSCG.so lib/
